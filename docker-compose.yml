@@ -1,0 +1,7 @@
+services:
+
+  contratos-api:
+    build: ./
+    restart: always
+    ports:
+      - 80:80
