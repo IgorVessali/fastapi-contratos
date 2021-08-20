@@ -1,73 +1,43 @@
 import fastapi as _fastapi
-import sqlalchemy.orm as _orm
-from os import path
-from typing import List
-
-import api.routers.auth as _auth
-import api.routers.users as _users
 import api.database as _database
+import api.routers.auth as _auth
+import api.routers.estados as _estados
+import api.routers.empresas as _empresas
+import api.routers.usuarios as _usuarios
 
+from fastapi_pagination import add_pagination
+from fastapi.openapi.utils import get_openapi
 
 app = _fastapi.FastAPI()
-
-
 _database.create_database()
 
-
 app.include_router(_auth.router)
-app.include_router(_users.router)
+app.include_router(_estados.router)
+app.include_router(_empresas.router)
+app.include_router(_usuarios.router)
+
+add_pagination(app)
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    openapi_schema = get_openapi(
+        title="Sistema de Contratos.",
+        version="1.0",
+        description="Sistema de contratos e calculo de comissão da Mix Fiscal.",
+        routes=app.routes,
+    )
+    openapi_schema["info"]["x-logo"] = {
+        "url": "https://www.mixfiscal.com.br/wp-content/uploads/2021/01/logo-mixfiscal.png"
+    }
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
+
 
 # if __name__ == '__main__':
 #     import sys
 #     sys.path.append(path.join(path.dirname(__file__), '..'))
-
-# @app.post("/api/leads", response_model=_schemas.Lead)
-# async def create_lead(
-#     lead: _schemas.LeadCreate,
-#     user: _schemas.User = _fastapi.Depends(_services.get_current_user),
-#     db: _orm.Session = _fastapi.Depends(_services.get_db),
-# ):
-#     return await _services.create_lead(user=user, db=db, lead=lead)
-
-
-# @app.get("/api/leads", response_model=List[_schemas.Lead])
-# async def get_leads(
-#     user: _schemas.User = _fastapi.Depends(_services.get_current_user),
-#     db: _orm.Session = _fastapi.Depends(_services.get_db),
-# ):
-#     return await _services.get_leads(user=user, db=db)
-
-
-# @app.get("/api/leads/{lead_id}", status_code=200)
-# async def get_lead(
-#     lead_id: int,
-#     user: _schemas.User = _fastapi.Depends(_services.get_current_user),
-#     db: _orm.Session = _fastapi.Depends(_services.get_db),
-# ):
-#     return await _services.get_lead(lead_id, user, db)
-
-
-# @app.delete("/api/leads/{lead_id}", status_code=204)
-# async def delete_lead(
-#     lead_id: int,
-#     user: _schemas.User = _fastapi.Depends(_services.get_current_user),
-#     db: _orm.Session = _fastapi.Depends(_services.get_db),
-# ):
-#     await _services.delete_lead(lead_id, user, db)
-#     return {"message", "Successfully Deleted"}
-
-
-# @app.put("/api/leads/{lead_id}", status_code=200)
-# async def update_lead(
-#     lead_id: int,
-#     lead: _schemas.LeadCreate,
-#     user: _schemas.User = _fastapi.Depends(_services.get_current_user),
-#     db: _orm.Session = _fastapi.Depends(_services.get_db),
-# ):
-#     await _services.update_lead(lead_id, lead, user, db)
-#     return {"message", "Successfully Updated"}
-
-
-# @app.get("/api")
-# async def root():
-#     return {"message": "Awesome Leads Manager"}

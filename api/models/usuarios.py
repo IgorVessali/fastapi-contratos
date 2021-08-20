@@ -5,7 +5,7 @@ import api.database as _database
 
 
 class User(_database.Base):
-    __tablename__ = "users"
+    __tablename__ = "usuarios"
     
     id = _sql.Column(_sql.Integer, primary_key=True, index=True)
     nome = _sql.Column(_sql.String())

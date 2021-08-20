@@ -1,28 +1,32 @@
 import datetime as _dt
-import pydantic as _pydantic
+from pydantic import BaseModel
 
-class _UserBase(_pydantic.BaseModel):    
+class UserCreate(BaseModel):
     nome: str
     email: str
     ativo: bool
     email: str
-
-
-class UserCreate(_UserBase):
     password: str
 
     class Config:
         orm_mode = True
 
-
-class User(_UserBase):
+class User(BaseModel):
     id: int
+    nome: str
+    email: str
+    ativo: bool
+    email: str
 
     class Config:
         orm_mode = True
 
-class UserList(_UserBase):
+class UserList(BaseModel):
     id: int
+    nome: str
+    email: str
+    ativo: bool
+    email: str
     created: _dt.datetime
     updated: _dt.datetime
 

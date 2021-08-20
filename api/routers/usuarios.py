@@ -14,13 +14,14 @@ router = APIRouter(
 )
 
 
-@router.post("/novo-usuario")
+@router.post("/novo")
 async def create_user(
     user: _schemas.UserCreate, db: _orm.Session = _fastapi.Depends(_database.get_db)
 ):
     db_user = await _servicesUser.get_user_by_email(user.email, db)
     if db_user:
-        raise _fastapi.HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Já existe um usuário cadastrado com esse e-mail")
+        raise _fastapi.HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
+                                    detail="Já existe um usuário cadastrado com esse e-mail")
 
     user = await _servicesUser.create_user(user, db)
 
