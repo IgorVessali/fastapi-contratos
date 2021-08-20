@@ -1,30 +1,31 @@
 import os
+import jwt as _jwt
+import passlib.hash as _hash
 import fastapi as _fastapi
 import fastapi.security as _security
 import sqlalchemy.orm as _orm
-import passlib.hash as _hash
-import jwt as _jwt
-
-from fastapi import status
-from api.models import usuarios as _models
-from api.schemas import usuarios as _schemas
+import api.models as _models
 import api.database as _database
 
+from fastapi import status
+from api.schemas import usuarios as _schemas
 
 from dotenv import load_dotenv
 load_dotenv()
 
 oauth2schema = _security.OAuth2PasswordBearer(tokenUrl="/auth/token")
-
 JWT_SECRET = os.getenv("JWT_SECRET")
 
-
 async def get_user_by_email(email: str, db: _orm.Session):
-    return db.query(_models.User).filter(_models.User.email == email).first()
+    return db.query(_models.Usuario).filter(_models.Usuario.email == email).first()
+
+
+async def verify_password(password_plain: str):
+        return _hash.bcrypt.verify(password_plain, _models.Usuario.password)
 
 
 async def get_all_users(db: _orm.Session):
-    users = db.query(_models.User).all()
+    users = db.query(_models.Usuario).all()
     return list(map(_schemas.UserList.from_orm, users))
 
 
@@ -47,7 +48,6 @@ async def create_user(user: _schemas.UserCreate, db: _orm.Session):
 
 async def authenticate_user(email: str, password: str, db: _orm.Session):
     user = await get_user_by_email(db=db, email=email)
-
     if not user:
         return False
 
@@ -64,7 +64,7 @@ async def get_current_user(
 ):
     try:
         payload = _jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-        user = db.query(_models.User).get(payload["id"])
+        user = db.query(_models.Usuario).get(payload["id"])
     except:
         raise _fastapi.HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="E-mail ou senha inválido."

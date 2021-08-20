@@ -1,7 +1,6 @@
 import pydantic as _pydantic
 import decimal as _decimal
-from typing import Any
-import api.models.enuns.database as _enums
+import api.enums as _enums
 
 class Empresa(_pydantic.BaseModel):    
     id: int
@@ -36,7 +35,3 @@ class EmpresaUpdate(_pydantic.BaseModel):
     alq_imposto: _decimal.Decimal
     class Config:
         orm_mode = True
-
-class EmpresaRespSinc(_pydantic.BaseModel):
-    msg: str
-

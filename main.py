@@ -3,6 +3,7 @@ import api.database as _database
 import api.routers.auth as _auth
 import api.routers.omie_estados as _estados
 import api.routers.empresas as _empresas
+import api.routers.log_requests as _log_requests
 import api.routers.usuarios as _usuarios
 
 from fastapi_pagination import add_pagination
@@ -14,6 +15,7 @@ _database.create_database()
 app.include_router(_auth.router)
 app.include_router(_empresas.router)
 app.include_router(_estados.router)
+app.include_router(_log_requests.router)
 app.include_router(_usuarios.router)
 
 add_pagination(app)

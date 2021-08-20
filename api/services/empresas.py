@@ -1,9 +1,9 @@
 import sqlalchemy.orm as _orm
-import api.models.enuns.database as _enums
+import api.models as _models
+import api.enums as _enums
 
 from sqlalchemy.sql.sqltypes import String
 from fastapi import status, HTTPException
-from api.models import empresas as _models
 from api.schemas import empresas as _schemas
 
 async def create_empresa(db: _orm.Session, empresa: _schemas.EmpresaCreate):
@@ -18,7 +18,7 @@ async def get_all_empresas(status: _enums.StatusPesquisa, db: _orm.Session):
     if status == _enums.StatusPesquisa.Todos:
         empresas = db.query(_models.Empresa).all()
     else:
-        empresas = db.query(_models.Empresa).filter_by(status=status).all()
+        empresas = db.query(_models.Empresa).filter_by(status=status.name).all()
 
     return list(map(_schemas.Empresa.from_orm, empresas))
 

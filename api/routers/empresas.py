@@ -1,7 +1,7 @@
 import fastapi as _fastapi
 import sqlalchemy.orm as _orm
 import api.database as _database
-import api.models.enuns.database as _enums
+import api.enums as _enums
 
 from fastapi import APIRouter, status
 from api.services import usuarios as _servicesUser
@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 @router.post("/novo", response_model=_schemas.Empresa)
-async def create_empresa(
+async def create(
     empresa: _schemas.EmpresaCreate,
     user = _fastapi.Depends(_servicesUser.get_current_user),
     db: _orm.Session = _fastapi.Depends(_database.get_db),
@@ -29,7 +29,7 @@ async def create_empresa(
 
 
 @router.get("/todos", response_model=Page[_schemas.Empresa])
-async def get_empresas(
+async def get_all(
     status: _enums.StatusPesquisa, 
     user = _fastapi.Depends(_servicesUser.get_current_user),
     db: _orm.Session = _fastapi.Depends(_database.get_db),
@@ -38,7 +38,7 @@ async def get_empresas(
 
 
 @router.get("/buscar/{empresa_id}", status_code=status.HTTP_200_OK)
-async def get_empresa(
+async def get(
     empresa_id: int,
     user = _fastapi.Depends(_servicesUser.get_current_user),
     db: _orm.Session = _fastapi.Depends(_database.get_db),
@@ -47,7 +47,7 @@ async def get_empresa(
 
 
 @router.delete("/deletar/{empresa_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_empresa(
+async def delete(
     empresa_id: int,
     user = _fastapi.Depends(_servicesUser.get_current_user),
     db: _orm.Session = _fastapi.Depends(_database.get_db),
@@ -57,7 +57,7 @@ async def delete_empresa(
 
 
 @router.put("/atualizar/{empresa_id}", status_code=status.HTTP_200_OK)
-async def update_empresa(
+async def update(
     empresa_id: int,
     empresa: _schemas.EmpresaUpdate,
     user = _fastapi.Depends(_servicesUser.get_current_user),

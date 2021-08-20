@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 @router.post("/token")
-async def generate_token(
+async def generate(
     form_data: _security.OAuth2PasswordRequestForm = _fastapi.Depends(),
     db: _orm.Session = _fastapi.Depends(_database.get_db),
 ):

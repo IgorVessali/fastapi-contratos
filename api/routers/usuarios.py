@@ -17,7 +17,7 @@ router = APIRouter(
 
 
 @router.post("/novo")
-async def create_user(
+async def create(
     user: _schemas.UserCreate, db: _orm.Session = _fastapi.Depends(_database.get_db)
 ):
     db_user = await _servicesUser.get_user_by_email(user.email, db)
@@ -30,12 +30,12 @@ async def create_user(
 
 
 @router.get("/logado", response_model=_schemas.User)
-async def get_user(user: _schemas.User = _fastapi.Depends(_servicesUser.get_current_user)):
+async def get(user: _schemas.User = _fastapi.Depends(_servicesUser.get_current_user)):
     return user
 
 
 @router.get("/todos", response_model=Page[_schemas.UserList])
-async def get_all_users(db: _orm.Session = _fastapi.Depends(_database.get_db),
-                        user: _schemas.User = _fastapi.Depends(_servicesUser.get_current_user),
+async def get_all(db: _orm.Session = _fastapi.Depends(_database.get_db),
+                user: _schemas.User = _fastapi.Depends(_servicesUser.get_current_user),
     ):
     return paginate(await _servicesUser.get_all_users(db))

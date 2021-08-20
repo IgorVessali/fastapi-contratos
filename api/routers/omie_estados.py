@@ -14,13 +14,13 @@ router = APIRouter(
 )
 
 @router.get("/todos", response_model=Page[_schemas.EstadoList])
-async def get_all_estados(db: _orm.Session = _fastapi.Depends(_database.get_db),
-                            user = _fastapi.Depends(_servicesUser.get_current_user),
+async def get_all(db: _orm.Session = _fastapi.Depends(_database.get_db),
+                user = _fastapi.Depends(_servicesUser.get_current_user),
     ):
     return paginate(await _servicesEstado.get_all_estados(db))
 
 @router.get("/sincroniar")
-async def sincronize_estados(db: _orm.Session = _fastapi.Depends(_database.get_db),
-                            user = _fastapi.Depends(_servicesUser.get_current_user),
+async def sincronize(db: _orm.Session = _fastapi.Depends(_database.get_db),
+                    user = _fastapi.Depends(_servicesUser.get_current_user),
     ):
     return await _servicesEstado.sincronizar_estado(db)
