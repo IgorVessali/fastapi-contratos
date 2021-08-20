@@ -10,7 +10,8 @@ from api.schemas import empresas as _schemas
 from fastapi_pagination import Page, paginate
 
 router = APIRouter(
-    tags=['Empresas']
+    tags=['Empresas'],
+    prefix='/empresas'
 )
 
 @router.post("/novo", response_model=_schemas.Empresa)
@@ -27,7 +28,7 @@ async def create_empresa(
     return await _services.create_empresa(db, empresa)
 
 
-@router.get("/empresas", response_model=Page[_schemas.Empresa])
+@router.get("/todos", response_model=Page[_schemas.Empresa])
 async def get_empresas(
     status: _enums.StatusPesquisa, 
     user = _fastapi.Depends(_servicesUser.get_current_user),
@@ -36,7 +37,7 @@ async def get_empresas(
     return paginate(await _services.get_all_empresas(status, db))
 
 
-@router.get("/empresa/{empresa_id}", status_code=status.HTTP_200_OK)
+@router.get("/buscar/{empresa_id}", status_code=status.HTTP_200_OK)
 async def get_empresa(
     empresa_id: int,
     user = _fastapi.Depends(_servicesUser.get_current_user),

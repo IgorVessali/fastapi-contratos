@@ -1,8 +1,7 @@
-from pydantic.types import StrictStr
 import sqlalchemy.orm as _orm
-from sqlalchemy.sql.sqltypes import String
 import api.models.enuns.database as _enums
 
+from sqlalchemy.sql.sqltypes import String
 from fastapi import status, HTTPException
 from api.models import empresas as _models
 from api.schemas import empresas as _schemas

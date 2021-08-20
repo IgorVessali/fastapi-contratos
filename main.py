@@ -1,7 +1,7 @@
 import fastapi as _fastapi
 import api.database as _database
 import api.routers.auth as _auth
-import api.routers.estados as _estados
+import api.routers.omie_estados as _estados
 import api.routers.empresas as _empresas
 import api.routers.usuarios as _usuarios
 
@@ -12,8 +12,8 @@ app = _fastapi.FastAPI()
 _database.create_database()
 
 app.include_router(_auth.router)
-app.include_router(_estados.router)
 app.include_router(_empresas.router)
+app.include_router(_estados.router)
 app.include_router(_usuarios.router)
 
 add_pagination(app)

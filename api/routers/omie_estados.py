@@ -9,16 +9,17 @@ from api.schemas import omie_estados as _schemas
 from fastapi_pagination import Page, paginate
 
 router = APIRouter(
-    tags=['Estados']
+    tags=['Estados'],
+    prefix='/estados'
 )
 
-@router.get("/estados", response_model=Page[_schemas.EstadoList])
+@router.get("/todos", response_model=Page[_schemas.EstadoList])
 async def get_all_estados(db: _orm.Session = _fastapi.Depends(_database.get_db),
                             user = _fastapi.Depends(_servicesUser.get_current_user),
     ):
     return paginate(await _servicesEstado.get_all_estados(db))
 
-@router.get("/sincroniar-estados")
+@router.get("/sincroniar")
 async def sincronize_estados(db: _orm.Session = _fastapi.Depends(_database.get_db),
                             user = _fastapi.Depends(_servicesUser.get_current_user),
     ):

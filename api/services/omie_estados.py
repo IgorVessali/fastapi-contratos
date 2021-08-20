@@ -1,11 +1,11 @@
 import json, time
 import sqlalchemy.orm as _orm
+import api.omie.conexao as _omie_conexao
 
 
 from fastapi import status
 from api.models import omie_estados as _models
 from api.schemas import omie_estados as _schemas
-import api.omie.conexao as _omie_conexao
 
 
 async def get_all_estados(db: _orm.Session):
@@ -20,7 +20,6 @@ async def verifica_se_existe(uf, db: _orm.Session):
 
 
 async def sincronizar_estado(db):
-
     total_registros = 0
     inicio = time.time()
     # empresa = _database._orm.query(_models.Estado).get()
@@ -34,7 +33,7 @@ async def sincronizar_estado(db):
 
     response = _omie_conexao.buscaDados(url,data)
 
-    if response.status_code == 200:
+    if response.status_code == status.HTTP_200_OK:
         dados = json.loads(response.content)
         estados = dados['lista_estados']
         
@@ -63,9 +62,10 @@ async def cadastraEstado(estado, db: _orm.Session):
 
     obj = await verifica_se_existe(estado['cSigla'], db)
     if obj:
-        obj.sigla = estado['cSigla']
-        obj.codigo = estado['cCodigo']
-        obj.descricao = estado['cDescricao']
+        obj(**values)
+        # obj.sigla = estado['cSigla']
+        # obj.codigo = estado['cCodigo']
+        # obj.descricao = estado['cDescricao']
 
         db.commit()
         db.refresh(obj)
